@@ -5,7 +5,8 @@ Configure and start local Anno notebook.
 from   anno.anno.config import c
 from   anno.anno.render import (jinja2_filter_date_to_string,
                                 render_markdown,
-                                make_pdf)
+                                make_pdf,
+                                make_docx)
 from   anno.anno.notes import (get_labels,
                                get_notes,
                                get_note,
@@ -233,6 +234,18 @@ def pdf(note_url):
     os.remove(note.pdf_fname)
     return response
 
+@app.route('/<string:note_url>/docx', methods=['GET'])
+def docx(note_url):
+    note_uid = unquote_plus(note_url)
+    note = get_note(note_uid)
+    make_docx(note)
+    with open(note.docx_fname, mode='rb') as f:
+        response = make_response(f.read())
+        response.headers['Content-Type'] = 'application/docx'
+        cd = f'inline; filename={note_uid}.docx'
+        response.headers['Content-Disposition'] = cd
+    os.remove(note.docx_fname)
+    return response
 
 @app.route('/search', methods=['POST'])
 def search():

@@ -32,6 +32,20 @@ def make_pdf(note):
                           extra_args=extra_args,
                           outputfile=note.pdf_fname)
 
+def make_docx(note):
+#    extra_args = ['-V', 'geometry:margin=1in', '--pdf-engine', 'pdflatex',
+#                  '-V', 'colorlinks', '-V', 'urlcolor=NavyBlue']
+
+    # FIXME. This is hacky. I'm replacing
+    #   [my caption](/image/foo.png)
+    # with
+    #   [my caption](/_images/foo.png)
+    # because I can't figure out how to tell Pandoc where the image files live.
+    text = re.sub(r'(\(/image/)', '(_images/', note.text)
+
+    pypandoc.convert_text(text, to='docx', format='md',
+                          extra_args=[],
+                          outputfile=note.docx_fname)
 
 def parse_frontmatter(text):
     if not text.startswith('---'):

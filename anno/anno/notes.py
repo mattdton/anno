@@ -163,6 +163,10 @@ class Note:
     def pdf_fname(self):
         return str(Path(self.fname).with_suffix('.pdf'))
 
+    @property
+    def docx_fname(self):
+        return str(Path(self.fname).with_suffix('.docx'))
+
     @classmethod
     def from_fname(cls, fname):
         path = join(NOTES_DIR, fname)
